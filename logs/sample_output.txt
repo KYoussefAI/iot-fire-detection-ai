@@ -1,0 +1,12 @@
+Démarrage du simulateur IoT - Membre 1
+Broker MQTT : localhost:1883
+Topic MQTT  : iot/fire/sensor/data
+Intervalle  : 3 secondes
+----------------------------------------------------------------------
+MQTT inaccessible ([Errno 101] Network is unreachable) : passage en mode hors ligne.
+Message généré (mode hors ligne) :
+{"device_id": "fire_sensor_01", "timestamp": "2026-05-26T20:10:00", "temperature": 27.4, "smoke": 120, "gas": 180, "humidity": 52, "location": "Salle_1", "scenario": "normal"}
+----------------------------------------------------------------------
+Message généré (mode hors ligne) :
+{"device_id": "fire_sensor_01", "timestamp": "2026-05-26T20:10:03", "temperature": 72.6, "smoke": 840, "gas": 690, "humidity": 23, "location": "Salle_1", "scenario": "danger"}
+----------------------------------------------------------------------

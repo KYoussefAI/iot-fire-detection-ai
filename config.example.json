@@ -1,0 +1,17 @@
+{
+  "mqtt": {
+    "broker_host": "localhost",
+    "broker_port": 1883,
+    "sensor_topic": "iot/fire/sensor/data",
+    "alert_topic": "iot/fire/alert"
+  },
+  "thingsboard": {
+    "host": "thingsboard.cloud",
+    "mqtt_port": 1883,
+    "telemetry_topic": "v1/devices/me/telemetry",
+    "access_token": "PUT_YOUR_DEVICE_TOKEN_HERE"
+  },
+  "ai": {
+    "predict_script_path": "ai/predict.py"
+  }
+}

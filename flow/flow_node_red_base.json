@@ -1,0 +1,139 @@
+[
+    {
+        "id": "5bb61ebb48387936",
+        "type": "tab",
+        "label": "project flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "cb0e1123fc348e2c",
+        "type": "mqtt in",
+        "z": "5bb61ebb48387936",
+        "name": "",
+        "topic": "iot/fire/sensor/data",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d2895a1b9b0fc846",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 390,
+        "y": 440,
+        "wires": [
+            [
+                "a23071e09ec7ab36"
+            ]
+        ]
+    },
+    {
+        "id": "a23071e09ec7ab36",
+        "type": "function",
+        "z": "5bb61ebb48387936",
+        "name": "Validate Sensor Payload",
+        "func": "let p = msg.payload;\n\nconst requiredFields = [\n    \"device_id\",\n    \"timestamp\",\n    \"temperature\",\n    \"smoke\",\n    \"gas\",\n    \"humidity\",\n    \"location\"\n];\n\nfor (let field of requiredFields) {\n    if (p[field] === undefined || p[field] === null) {\n        node.warn(\"Missing field: \" + field);\n        return null;\n    }\n}\n\nif (\n    isNaN(Number(p.temperature)) ||\n    isNaN(Number(p.smoke)) ||\n    isNaN(Number(p.gas)) ||\n    isNaN(Number(p.humidity))\n) {\n    node.warn(\"Invalid numeric values\");\n    return null;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 440,
+        "wires": [
+            [
+                "ef5bfe5528a1fbc6"
+            ]
+        ]
+    },
+    {
+        "id": "ef5bfe5528a1fbc6",
+        "type": "function",
+        "z": "5bb61ebb48387936",
+        "name": "Normalize Sensor Values",
+        "func": "let p = msg.payload;\n\np.temperature = Number(p.temperature);\np.smoke = Number(p.smoke);\np.gas = Number(p.gas);\np.humidity = Number(p.humidity);\n\nmsg.payload = p;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 440,
+        "wires": [
+            [
+                "551d5cf66cbb8629"
+            ]
+        ]
+    },
+    {
+        "id": "551d5cf66cbb8629",
+        "type": "function",
+        "z": "5bb61ebb48387936",
+        "name": "Fire Risk Pre-Alert Logic",
+        "func": "let p = msg.payload;\n\nif (\n    p.temperature > 65 ||\n    p.smoke > 650 ||\n    p.gas > 600\n) {\n    p.pre_alert = \"danger\";\n}\nelse if (\n    p.temperature > 45 ||\n    p.smoke > 250 ||\n    p.gas > 300\n) {\n    p.pre_alert = \"suspect\";\n}\nelse {\n    p.pre_alert = \"normal\";\n}\n\nmsg.payload = p;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1190,
+        "y": 440,
+        "wires": [
+            [
+                "8228209590984eee"
+            ]
+        ]
+    },
+    {
+        "id": "8228209590984eee",
+        "type": "debug",
+        "z": "5bb61ebb48387936",
+        "name": "Clean Payload Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1440,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d2895a1b9b0fc846",
+        "type": "mqtt-broker",
+        "name": "Local Mosquitto",
+        "broker": "localhost",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
