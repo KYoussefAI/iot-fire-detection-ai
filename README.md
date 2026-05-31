@@ -4,6 +4,10 @@
 
 Ce projet assemble un système complet de démonstration académique pour la détection d’incendie. Un simulateur Python génère des mesures de capteurs incendie, publie des messages JSON via MQTT, Node-RED traite ces messages, appelle le script d’IA `predict.py` pour classifier le risque, déclenche une alerte MQTT si nécessaire, puis transmet les données enrichies vers un tableau de bord ThingsBoard.
 
+Le script Python joue le rôle d’un Raspberry Pi simulé dans la couche edge du système.
+
+L’actionneur simulé correspond à une alarme virtuelle déclenchée via le champ `alert=true` et la publication sur le topic MQTT `iot/fire/alert`.
+
 ## Architecture globale
 
 ```text
@@ -87,6 +91,8 @@ Sorties IA attendues :
 - `ai_status` = classification finale produite par `predict.py`.
 - `alert` = `true` uniquement lorsque `ai_status == "danger"`.
 
+Dans cette architecture, l’actionneur simulé est l’alarme virtuelle représentée par `alert=true` et par la publication du message d’alerte sur `iot/fire/alert`.
+
 Exemple de JSON enrichi :
 
 ```json
@@ -109,6 +115,19 @@ Exemple de JSON enrichi :
 ## Configuration ThingsBoard
 
 Chaque utilisateur doit configurer son propre token de device ThingsBoard ainsi que son tableau de bord.
+
+La partie cloud est assurée par ThingsBoard Cloud. Les données enrichies par Node-RED sont envoyées vers ThingsBoard sous forme de télémétrie MQTT. ThingsBoard joue deux rôles : il stocke les valeurs reçues sous forme de séries temporelles et il permet leur visualisation à travers un tableau de bord. Les widgets affichent les mesures `temperature`, `smoke`, `gas` et `humidity`, ainsi que les champs `ai_status` et `alert`. Ainsi, le stockage et la visualisation demandés dans le cahier des charges sont couverts par ThingsBoard.
+
+### Détails de configuration MQTT ThingsBoard
+
+- ThingsBoard Cloud est la plateforme IoT cloud utilisée dans ce projet.
+- Les données enrichies sont envoyées à ThingsBoard via MQTT.
+- Le topic de télémétrie utilisé est `v1/devices/me/telemetry`.
+- Le token d’accès du device est utilisé comme nom d’utilisateur MQTT.
+- Aucun mot de passe n’est requis dans la configuration standard du device.
+- ThingsBoard stocke la télémétrie entrante sous forme de données time-series et la visualise dans des tableaux de bord.
+- Le tableau de bord affiche `temperature`, `smoke`, `gas`, `humidity`, `ai_status` et `alert`.
+- Les tokens réels ne doivent jamais être commités dans GitHub.
 
 ## État actuel du projet
 

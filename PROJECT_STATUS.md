@@ -12,7 +12,7 @@
 | Prédiction IA | Implémente | `ai/predict.py` | Retourne `ai_status`, `risk_score` et `alert` |
 | Intégration IA Node-RED | Implémente | `integration_ia_node_red/flow_node_red_ai_alert.json` | Appel de `predict.py` et fusion des résultats |
 | Topic alerte MQTT | Implémente | `integration_ia_node_red/flow_node_red_ai_alert.json` | Publication sur `iot/fire/alert` |
-| Dashboard ThingsBoard | Documenté | `screenshots/` | Captures de tableaux de bord et états |
+| Dashboard ThingsBoard | Documenté / validé par captures | `screenshots/` | ThingsBoard assure le stockage time-series et la visualisation cloud |
 | Test bout en bout | Documenté | `cloud/preuve_test_bout_en_bout.md` | Preuve académique de la chaîne complète |
 
 ## Configuration requise avant exécution

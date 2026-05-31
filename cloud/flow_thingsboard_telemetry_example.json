@@ -1,0 +1,122 @@
+[
+  {
+    "id": "tb-flow-tab",
+    "type": "tab",
+    "label": "thingsboard telemetry example",
+    "disabled": false,
+    "info": "Exemple nettoye d'envoi de telemetrie vers ThingsBoard Cloud."
+  },
+  {
+    "id": "tb-inject-example",
+    "type": "inject",
+    "z": "tb-flow-tab",
+    "name": "Sample Processed Payload",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"temperature\":79.35,\"smoke\":851,\"gas\":836,\"humidity\":23,\"ai_status\":\"danger\",\"risk_score\":1,\"alert\":true}",
+    "payloadType": "json",
+    "x": 200,
+    "y": 120,
+    "wires": [
+      [
+        "tb-prepare-telemetry"
+      ]
+    ]
+  },
+  {
+    "id": "tb-prepare-telemetry",
+    "type": "function",
+    "z": "tb-flow-tab",
+    "name": "Prepare ThingsBoard Telemetry",
+    "func": "const p = msg.payload;\nmsg.payload = {\n    temperature: Number(p.temperature),\n    smoke: Number(p.smoke),\n    gas: Number(p.gas),\n    humidity: Number(p.humidity),\n    ai_status: p.ai_status,\n    risk_score: Number(p.risk_score),\n    alert: Boolean(p.alert)\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 470,
+    "y": 120,
+    "wires": [
+      [
+        "tb-mqtt-out",
+        "tb-debug"
+      ]
+    ]
+  },
+  {
+    "id": "tb-debug",
+    "type": "debug",
+    "z": "tb-flow-tab",
+    "name": "Telemetry Debug",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "x": 710,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "tb-mqtt-out",
+    "type": "mqtt out",
+    "z": "tb-flow-tab",
+    "name": "MQTT out to ThingsBoard Cloud",
+    "topic": "v1/devices/me/telemetry",
+    "qos": "",
+    "retain": "",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "tb-broker-config",
+    "x": 760,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "tb-broker-config",
+    "type": "mqtt-broker",
+    "name": "ThingsBoard Cloud Placeholder",
+    "broker": "mqtt.thingsboard.cloud",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": false,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": "",
+    "credentials": {
+      "user": "PUT_YOUR_DEVICE_TOKEN_HERE",
+      "password": ""
+    }
+  }
+]

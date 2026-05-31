@@ -4,6 +4,8 @@
 
 Cette partie représente la couche objets / edge du projet IoT. Elle simule les capteurs d’un système intelligent de détection d’incendie et publie des messages JSON vers un broker MQTT configuré localement.
 
+Le script Python joue le rôle d’un Raspberry Pi simulé.
+
 ## Capteurs simulés
 
 | Capteur | Description |
@@ -18,6 +20,8 @@ Cette partie représente la couche objets / edge du projet IoT. Elle simule les 
 - broker local par defaut : `localhost:1883`
 - topic capteurs : `iot/fire/sensor/data`
 - topic alertes : `iot/fire/alert`
+
+L’actionneur simulé du projet est une alarme virtuelle declenchee via le champ `alert=true` et le topic MQTT `iot/fire/alert`.
 
 Des brokers publics peuvent etre utilises a titre optionnel pour des essais distants, mais ils ne sont pas requis pour la demonstration locale.
 
